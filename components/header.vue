@@ -20,17 +20,19 @@
       <!-- 登录状态 -->
       <el-row>
         <!-- 下拉菜单 -->
-        <el-dropdown v-if="true">
+        <el-dropdown v-if="$store.state.user.userInfo.token">
           <span class="el-dropdown-link">
             <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt>
 
-            <span>地球发动机</span>
+            <span>{{$store.state.user.userInfo.user.nickname}}</span>
 
             <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item>
+              <span @click="handleLogout">退出</span>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
@@ -43,7 +45,20 @@
 </template>
 
 <script>
-export default {};
+export default {
+  methods:{
+    handleLogout(){
+      this.$store.commit("user/clearUserInfo");
+      this.$message.warning("退出成功，正在跳转...");
+                setTimeout(()=>{
+                    this.$router.push("/user/login")
+                },3000)
+    }
+  }
+  // mounted(){
+  //   console.log(this.$store.state.user.userInfo.user.nickname);
+  // }
+};
 </script>
 
 <style lang="less" scoped>
