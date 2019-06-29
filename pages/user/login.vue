@@ -30,14 +30,16 @@
 
 <script>
 import LoginForm from "@/components/user/LoginForm.vue";
+import RegisterForm from "@/components/user/RegisterForm.vue"
 export default {
     data(){
         return {
-            currentTab: 0
+            currentTab: 1
         }
     },
     components:{
-        LoginForm
+        LoginForm,
+        RegisterForm
     },
     methods: {
         handleChangeTab(index){

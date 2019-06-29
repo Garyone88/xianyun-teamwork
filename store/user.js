@@ -21,6 +21,7 @@ export const mutations = {
 }
 
 export const actions = {
+    // commit 从 store解构出来；
     login({commit},data){
         return this.$axios({
             url:"/accounts/login",
