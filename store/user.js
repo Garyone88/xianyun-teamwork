@@ -7,7 +7,7 @@ export const state = ()=>{
             user: {
                 nickname: "未来守护者"
             }
-        },
+        }
     }
 }
 

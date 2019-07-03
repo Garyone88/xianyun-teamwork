@@ -38,17 +38,19 @@
 
     <!-- 特价机票 -->
     <div class="air-sale">
-        
+        <airSale />
     </div>
   </section>
 </template>
 
 <script>
 import SearchForm from "@/components/air/searchForm";
+import airSale from "@/components/air/airSale"
 
 export default {
     components: {
-        SearchForm
+        SearchForm,
+        airSale
     },
 }
 </script>
