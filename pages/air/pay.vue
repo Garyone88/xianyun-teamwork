@@ -89,6 +89,15 @@ export default {
                 QRCode.toCanvas(stage, payInfo.code_url, {
                     width: 200
                 }); 
+
+                this.timer = setInterval(async () => {
+                    const isResolve = await this.isPay(payInfo);
+                    console.log(isResolve)
+                    if(isResolve){
+                        clearInterval(this.timer)
+                        return;
+                    }
+                }, 3000)
             })
         }, 200);
     },
