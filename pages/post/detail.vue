@@ -1,7 +1,7 @@
 <template>
   <el-row type="flex" class="detail">
     <!-- 左面 -->
-    <el-col :span="18" class="left">
+    <el-col :span="17" class="left">
       <!-- 面包屑 -->
       <div class="mianbao">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -52,7 +52,7 @@
           <i class="iconfont iconpinglun"></i>
           <p>评论(91)</p>
         </div>
-        <div class="good-list">
+        <div class="good-list" @click="handleCollect">
           <i class="iconfont iconstar1"></i>
           <p>收藏</p>
         </div>
@@ -60,7 +60,7 @@
           <i class="iconfont iconfenxiang"></i>
           <p>分享</p>
         </div>
-        <div class="good-list">
+        <div class="good-list" @click="handleGood">
           <i class="iconfont iconding"></i>
           <p>点赞9</p>
         </div>
@@ -88,17 +88,16 @@
           <div>
             <el-button type="primary">提交</el-button>
           </div>
-           
         </div>
         <!-- 评论页面 -->
         <div class="comment">
           <template>
-              <div>
-                <span>青春是一个短暂的美梦, 当你醒来时, 它早已消失无踪</span>
-                <el-divider></el-divider>
-                <span>少量的邪恶足以抵消全部高贵的品质, 害得人声名狼藉</span>
-              </div>
-         </template>
+            <div>
+              <span>青春是一个短暂的美梦, 当你醒来时, 它早已消失无踪</span>
+              <el-divider></el-divider>
+              <span>少量的邪恶足以抵消全部高贵的品质, 害得人声名狼藉</span>
+            </div>
+          </template>
         </div>
         <!-- 分页 -->
         <el-pagination
@@ -114,7 +113,7 @@
     </el-col>
 
     <!-- 右面 -->
-    <el-col :span="6" class="right">
+    <el-col :span="7" class="right">
       <div class="about">
         <p>相关攻略</p>
       </div>
@@ -150,8 +149,56 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+    },
+    // 收藏功能
+    handleCollect() {
+      let token = this.$store.state.user.userInfo.token;
+      if (token) {
+        this.$axios({
+          url: "/posts/star",
+          method: "GET",
+          params:{
+          id:'$router.query.id'
+          },
+           headers: {
+            Authorization: `Bearer ${token}`
+          },
+
+        }).then(res => {
+          this.$message.success("收藏成功");
+        });
+      } else {
+        this.$router.push({
+          path: "/user/login"
+        });
+        this.$message.success("请登录");
+      }
+    },
+    // 点赞功能
+    handleGood (){
+    let token=this.$store.state.user.userInfo.token
+    if(token){
+    this.$axios({
+      url:"/posts/like",
+      method:'GET',
+      headers:{
+         Authorization:`Bearer ${token}`
+      },
+      params:{
+         id:this.$route.query.id
+      }
+    }).then(res=>{
+       this.$message.success("点赞成功");
+    })
+    }else{
+      this.$router.push({
+        path: "/user/login"
+      });
+      this.$message.success("请登录");
     }
-  }
+    }
+  },
+  mounted() {}
 };
 </script>
 
@@ -181,8 +228,8 @@ export default {
     .good {
       display: flex;
       justify-content: center;
-align-items: center;
-padding: 50px  0;
+      align-items: center;
+      padding: 50px 0;
       .good-list {
         margin: 0 20px;
         font-size: 20px;
@@ -193,26 +240,26 @@ padding: 50px  0;
           font-size: 28px;
           color: orange;
         }
-        p{
-              margin-top: 5px;
-    font-size: 14px;
-    color: #999;
+        p {
+          margin-top: 5px;
+          font-size: 14px;
+          color: #999;
         }
       }
     }
-    .speak{
-      p{
-font-weight: 400;
-    font-size: 18px;
-    margin-bottom: 20px;
+    .speak {
+      p {
+        font-weight: 400;
+        font-size: 18px;
+        margin-bottom: 20px;
       }
     }
-    .image-put{
-      margin-top:15px;
+    .image-put {
+      margin-top: 15px;
       display: flex;
       justify-content: space-between;
     }
-    .comment{
+    .comment {
       margin: 20px 0;
       border: 1px solid #ddd;
     }
