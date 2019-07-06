@@ -39,7 +39,7 @@
                       <h4>草稿箱({{form.sum}}) </h4>
                       <el-row v-for="(item,index) in history" :key="index">
                             <div class="draft-item">
-                                <span>{{item.title}}</span>
+                                <span @click="editor(index)">{{item.title}}</span>
                                 <p>2019-6-8</p>
                             </div>
                       </el-row>
@@ -84,7 +84,12 @@ export default {
       },
 
       methods: {
-
+              editor(index){  
+                    const localAirs = JSON.parse(localStorage.getItem('posts'))
+                            this.form.title = localAirs[index].title;
+                            this.content = localAirs[index].content;
+                            this.form.city = localAirs[index].city;
+              },
               queryDepartSearch(value, cb){
                         if(!value){
                                return cb([])
@@ -161,15 +166,15 @@ export default {
                             title:this.form.title,
                           }]
 
-                        
-                  // 把当前表单的值保存到本地
-                  const localAirs = JSON.parse(localStorage.getItem("posts") || `[]`);
+                  
+                  this.history.unshift({
+                            content: this.content,
+                            city:this.form.city,
+                            title:this.form.title,
+                          })
 
-                  // 存进去新的搜索记录
-                  localAirs.unshift(this.form); 
-
-                  // 保存到本地
-                  localStorage.setItem("posts", JSON.stringify(localAirs));
+                          // 保存到本地
+                  localStorage.setItem("posts", JSON.stringify(this.history));
                     },
                     submitForm(){
                         const token = this.$store.state.user.userInfo.token;
@@ -230,7 +235,8 @@ export default {
                               this.form.title=" ";
                               this.content=" ";
                           })
-                    }
+                    },
+
                   }
                   
               }
@@ -291,7 +297,7 @@ export default {
           .draft-box{
             .draft-item{
               margin: 6px 0;
-              cursor:pointer;
+              cursor:pointer
             }
             h4{
               margin-bottom: 10px;
