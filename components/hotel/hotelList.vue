@@ -9,7 +9,13 @@
             <el-row class="hotel-info" type="flex" justify="space-between">
                 <div class="hotel-introduce">
                     <a href="#"><h3>亮哥我喜欢你</h3></a>
-                    <div class="introduce-tips">hao lai ge shang wu hotel  经济型</div>
+                    <div class="introduce-tips">
+                        hao lai ge shang wu hotel  
+                        <i class="iconfont" title='三星级'>
+                            &#xe63d;&#xe63d;&#xe63d;
+                            <span>经济型</span>
+                        </i>
+                        </div>
                     <el-row class="introduce-evaluate" type="flex" justify="space-between">
                         <el-rate
                             v-model="value"
