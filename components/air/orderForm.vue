@@ -156,7 +156,6 @@ export default {
       const {
         user: { userInfo }
       } = this.$store.state;
-
       this.$message({
         message: "正在生成订单！请稍等",
         type: "success"
@@ -166,9 +165,9 @@ export default {
         url: `/airorders`,
         method: "POST",
         data: orderData,
-        headers: {
-          Authorization: `Bearer ${userInfo.token || "NO TOKEN"}`
-        }
+         headers: {
+                     Authorization: `Bearer ${userInfo.token || "NO TOKEN"}`
+                }
       })
         .then(res => {
         const {data: {id}} = res.data;

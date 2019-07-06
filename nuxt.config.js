@@ -25,6 +25,9 @@ export default {
   ** Global CSS
   */
   css: [
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css',
     'element-ui/lib/theme-chalk/index.css',
     'assets/main.css'
   ],
@@ -34,6 +37,7 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     { src: '@/plugins/localStorage', ssr: false },
+    {src: '~/plugins/vue-quill-editor', ssr: false },
     '@/plugins/axios' // 调用插件
   ],
   /*
@@ -49,7 +53,7 @@ export default {
   */
   axios: {
     baseURL: "http://157.122.54.189:9095",
-	 // baseURL: "http://127.0.0.1:1337"
+  //  baseURL: "http://127.0.0.1:1337"
   },
   /*
   ** Build configuration
