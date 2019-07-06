@@ -52,8 +52,13 @@ export default {
   ** See https://axios.nuxtjs.org/options
   */
   axios: {
+<<<<<<< HEAD
     baseURL: "http://157.122.54.189:9095",
   //  baseURL: "http://127.0.0.1:1337"
+=======
+    // baseURL: "http://157.122.54.189:9095",
+	 baseURL: "http://127.0.0.1:1337"
+>>>>>>> 0d0a54f80d32d820008969ea6d143346dd20b99e
   },
   /*
   ** Build configuration
