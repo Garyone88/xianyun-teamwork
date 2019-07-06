@@ -7,7 +7,7 @@
         <i slot="suffix" class="el-icon-search" @click="handleSearch"></i>
         </el-input>
         <el-row class="advise">
-            <i>推荐:</i>
+            <i @click="handledemo">推荐:</i>
             <span v-for="(item, index) in adviseCity" :key="index" @click="handlePush(item)">
                 {{item}}
             </span>
@@ -27,6 +27,9 @@ export default {
       }
     },
     methods:{
+        handledemo(){
+            this.adviseCity.push("深圳")
+        },
         // 搜索城市
         handleSearch(){
             this.$router.push({
@@ -59,11 +62,12 @@ export default {
                 font-weight: 600;
                 font-size: 18px;
                 padding-right: 5px;
+                cursor: pointer;
             }
         }
         .advise {
             font-size: 14px;
-            padding-top: 6px;
+            padding-top: 14px;
             i {
                 font-style: normal;
             }
