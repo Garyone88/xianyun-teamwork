@@ -1,6 +1,5 @@
 <template>
     <div class="tool">
-            
         <el-row type="flex">
 
             <el-row class="tool-item">
@@ -13,56 +12,60 @@
 
             <el-row class="tool-item">
                 <div class="tool-title">住宿等级</div>
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleLevels">
                     <span class="el-dropdown-link">
                         {{hotellevel}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="a">黄金糕</el-dropdown-item>
-                        <el-dropdown-item command="b">狮子头</el-dropdown-item>
-                        <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
+                        <el-dropdown-item 
+                        :command="`${item.level}&${item.name}`" 
+                        v-for="(item, index) in data.levels"
+                        :key="index">{{item.name}}</el-dropdown-item>
                     </el-dropdown-menu>
                     </el-dropdown>
             </el-row>
 
             <el-row class="tool-item">
                 <div class="tool-title">住宿类型</div>
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleTypes">
                     <span class="el-dropdown-link">
                         {{hoteltype}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="a">黄金糕</el-dropdown-item>
-                        <el-dropdown-item command="b">狮子头</el-dropdown-item>
-                        <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
+                        <el-dropdown-item 
+                        :command="`${item.id}&${item.name}`" 
+                        v-for="(item, index) in data.types"
+                        :key="index">{{item.name}}</el-dropdown-item>
                     </el-dropdown-menu>
                     </el-dropdown>
             </el-row>
 
             <el-row class="tool-item">
                 <div class="tool-title">酒店设施</div>
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleAssets">
                     <span class="el-dropdown-link">
                         {{hotelfacility}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="a">黄金糕</el-dropdown-item>
-                        <el-dropdown-item command="b">狮子头</el-dropdown-item>
-                        <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
+                        <el-dropdown-item 
+                        :command="`${item.id}&${item.name}`" 
+                        v-for="(item, index) in data.assets"
+                        :key="index">{{item.name}}</el-dropdown-item>
                     </el-dropdown-menu>
                     </el-dropdown>
             </el-row>
 
             <el-row class="tool-item">
                 <div class="tool-title">酒店品牌</div>
-                    <el-dropdown @command="handleCommand">
+                    <el-dropdown @command="handleBrands">
                     <span class="el-dropdown-link">
                         {{hotelbrand}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item command="a">黄金糕</el-dropdown-item>
-                        <el-dropdown-item command="b">狮子头</el-dropdown-item>
-                        <el-dropdown-item command="c">螺蛳粉</el-dropdown-item>
+                    <el-dropdown-menu slot="dropdown" style="height: 200px;overflow: auto;">
+                        <el-dropdown-item 
+                        :command="`${item.id}&${item.name}`"  
+                        v-for="(item, index) in data.brands"
+                        :key="index">{{item.name}}</el-dropdown-item>
                     </el-dropdown-menu>
                     </el-dropdown>
             </el-row>
@@ -77,6 +80,12 @@
 
 <script>
 export default {
+    props:{
+        data:{
+            type: Object,
+            default:{}
+        }
+    },
     data: function () {
         return {
             value: 4000,
@@ -88,10 +97,37 @@ export default {
     },
 
     methods:{
-        handleCommand(command) {
-        this.$message('click on item ' + command);
-      }
+        handleLevels(command) {
+            let arr = command.split('&')
+            this.$emit('changeHotellevel',+arr[0]);
+            this.hotellevel = arr[1];
+        },
+
+        handleTypes(command) {
+            let arr = command.split('&')
+            this.$emit('changeHoteltype',+arr[0]);
+            this.hoteltype = arr[1];
+        },
+
+        handleAssets(command) {
+            let arr = command.split('&')
+            this.$emit('changeHotelasset',+arr[0]);
+            this.hotelfacility = arr[1];
+        },
+
+        handleBrands(command) {
+            let arr = command.split('&')
+            this.$emit('changgeHotelbrand',+arr[0]);
+            this.hotelbrand = arr[1];
+        },
+    },
+
+    watch:{
+        value:function () {
+            this.$emit('changePrice_in',this.value)
+        }
     }
+    
 }
 </script>
 

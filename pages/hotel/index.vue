@@ -70,15 +70,26 @@
 
     <!-- 中间 -->
     <el-row type="flex" justify="space-between" class="middle">
-      <HotelMiddle />
+      <HotelMiddle/>
       <HotelMap />
     </el-row>
-
     <!-- 中间工具栏 -->
-    <HotelTool />
+    <HotelTool 
+    :data='hoteloptions' 
+    @changePrice_in='changePrice_in'
+    @changeHotellevel='changeHotellevel'
+    @changeHoteltype='changeHoteltype'
+    @changeHotelasset='changeHotelasset'
+    @changgeHotelbrand='changgeHotelbrand'
+    />
+
+    
 
     <!-- 底部酒店列表 -->
-    <HotelList />
+    <HotelList :data='hotellist' v-if="hotellist.length !== 0"/>
+    <div v-else>
+      <h2 style="text-align: center;">暂无数据</h2>
+    </div>
 
     <!-- 分页器 -->
     <el-pagination
@@ -89,9 +100,9 @@
       :pager-count="5"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-size="10"
+      :page-size="pagesize"
       layout="prev, pager, next"
-      :total="100"
+      :total="total"
     ></el-pagination>
   </div>
 </template>
@@ -105,14 +116,21 @@ import HotelMap from "@/components/hotel/hotelMap.vue";
 export default {
   data: function() {
     return {
-      currentPage: 1,
+      currentPage: 1,  //当前页码
+      total: 1,   //页数总计
+      pagesize: 10, //每页没显示多少条
       input: "",
       value: "",
-      state: "南京", //目的地
+      state: "", //目的地
       adult: 1, //成年人
       children: 0, //儿童
       person: 1,    //总人数 
       isShow: false, //隐藏选项
+      price_lt: 0,   //工具栏的价格
+      hotellevel: 0, //工具栏的酒店等级
+      hoteltype: 0,  //工具栏的酒店类型
+      hotelasset: 0, //工具栏的酒店设施
+      hotelbrand: 0, //工具栏的酒店品牌
 
 
       adultlist: [
@@ -135,9 +153,10 @@ export default {
 
       restaurants: [], //目的地显示数组
 
-      hotelinfo:[],  //酒店原始数据
+      // hotellist:[{  scenic: [],hotellevel:{},name: '' }],  //根据条件渲染的酒店列表
+      hotellist:[],  //根据条件渲染的酒店列表
 
-      hotellist:[]  //根据条件渲染的酒店列表
+      hoteloptions: {}  //酒店选项的数据
     };
   },
 
@@ -149,9 +168,13 @@ export default {
   },
 
   methods: {
+    //修改当前页
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.gethotellist((val-1)*this.pagesize).then( res => {
+        this.hotellist = res.data.data;
+      })
     },
+
     querySearch(queryString, cb) {
       var restaurants = this.restaurants;
       var results = queryString
@@ -222,6 +245,44 @@ export default {
             this.input = `${this.adult}成人`
         }
         this.isShow = false;
+    },
+
+    //请求分页列表
+    gethotellist(start){
+      return this.$axios({
+          url: `/hotels`,
+          method: 'GET',
+          params:{
+          _limit: this.pagesize,
+          _start: start,
+          ...this.$route.query
+        }
+      })
+    },
+
+    //工具组件传值回来修改价格数据
+    changePrice_in(val){
+      this.price_lt = val;
+    },
+
+    //工具组件传值回来修改酒店等级
+    changeHotellevel(val){
+      this.hotellevel = val;
+    },
+
+    //工具组件传值回来修改酒店类型
+    changeHoteltype(val){
+      this.hoteltype = val;
+    },
+
+    //工具组件传值回来修改酒店设施
+    changeHotelasset(val){
+      this.hoteltype = val;
+    },
+
+    //工具组件传值回来修改酒店品牌
+    changgeHotelbrand(val){
+      this.hotelbrand = val;
     }
   },
 
@@ -234,14 +295,72 @@ export default {
         });
         this.restaurants = data;
       });
+    },
+
+    price_lt: function () {
+      this.$router.push({
+        path: '/hotel',
+        query:{
+          ...this.$route.query,
+          price_lt: this.price_lt
+        }
+      })
+    },
+
+    hotellevel:function () {
+      this.$router.push({
+        path: '/hotel',
+        query:{
+          ...this.$route.query,
+          hotellevel: this.hotellevel
+        }
+      })
+    },
+
+    hoteltype:function () {
+      this.$router.push({
+        path: '/hotel',
+        query:{
+          ...this.$route.query,
+          hoteltype: this.hoteltype
+        }
+      })
+    },
+
+
+    hotelasset:function () {
+      this.$router.push({
+        path: '/hotel',
+        query:{
+          ...this.$route.query,
+          hotelasset: this.hotelasset
+        }
+      })
+    },
+
+    hotelbrand:function () {
+      this.$router.push({
+        path: '/hotel',
+        query:{
+          ...this.$route.query,
+          hotelbrand: this.hotelbrand
+        }
+      })
+    },
+
+    $route(){
+      this.gethotellist().then( res => {
+        this.currentPage = 1;
+        this.total = res.data.total;
+        this.hotellist = res.data.data;
+      })
     }
   },
 
   mounted() {
-    this.$router.push(`/hotel?city=74`);
-
+    this.currentPage = 1;
     //获取城市列表
-    this.getCity(this.state).then(res => {
+    this.getCity().then(res => {
       let { data } = res.data;
       data.forEach(v => {
         v.value = v.name;
@@ -250,14 +369,25 @@ export default {
     });
 
     //获取酒店信息
-    this.$axios({
-        url: `/hotels`,
-        method: 'GET',
-        params: {city: this.$route.query.city}
-    }).then( res => {
-        this.hotelinfo = res.data.data;
-        this.hotellist = res.data.data;
+    this.gethotellist().then( res => {
+      // console.log(res);
+      this.currentPage = 1;
+      this.total = res.data.total;
+      this.hotellist = res.data.data;
     })
+
+    //请求酒店选项
+    this.$axios({
+        url: '/hotels/options',
+        method: 'GET'
+    }).then( res =>{
+        let {data} = res.data;
+        this.hoteloptions = data;
+    })
+
+
+    
+
   }
 };
 </script>

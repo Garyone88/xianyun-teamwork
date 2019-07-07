@@ -1,54 +1,60 @@
 <template>
     <div class="main">
-        <el-row class="hotelitem" type="flex">
+        <el-row 
+        class="hotelitem" 
+        type="flex"
+        v-for="(item, index) in data"
+        :key="index"
+        >
             <div class="hotel-img">
                 <a href="#">
-                    <img src="http://qcloud.dpfile.com/pc/wQ2ejOSmhB4OoEq1LYPHp_2RhNciyW026YiQFr_EEZsQrI_ZB6abZPwgKDOmI03U3dWYFEM5hoslgWXTJDjSPA.jpg" alt="">
+                    <img :src="item.photos" alt="">
                 </a>
             </div>
             <el-row class="hotel-info" type="flex" justify="space-between">
                 <div class="hotel-introduce">
-                    <a href="#"><h3>亮哥我喜欢你</h3></a>
+                    <a href="#"><h3>{{item.name}}</h3></a>
                     <div class="introduce-tips">
-                        hao lai ge shang wu hotel  
-                        <i class="iconfont" title='三星级'>
-                            &#xe63d;&#xe63d;&#xe63d;
-                            <span>经济型</span>
-                        </i>
+                        {{item.alias}}  
+                        <i 
+                        class="iconfont iconhuangguan" 
+                        :title="`${item.hotellevel? item.hotellevel.name: null}级`" 
+                        v-for="item in (item.hotellevel? item.hotellevel.level: 0)" :key="item"></i>
+                        <span>{{item.hoteltype.name}}</span>
                         </div>
                     <el-row class="introduce-evaluate" type="flex" justify="space-between">
                         <el-rate
-                            v-model="value"
+                            v-model="item.stars"
                             disabled
                             show-score
                             text-color="#ff9900"
                             score-template="{value}分">
                         </el-rate>
-                        <div><span>58</span> 条评价</div>
+                        <div><span>{{item.all_remarks}}</span> 条评价</div>
                         <div><span>60</span> 篇游记</div>
                     </el-row>
                     <div class="introduce-site">
                         <span class="el-icon-location"></span>
-                        位于: 高淳县淳溪镇镇兴路118号(高淳县委党校对面)
+                        位于: {{item.address}}
                     </div>
                 </div>
                 <div class="hotel-book">
                     <a href="#">
                         <el-row type="flex" justify="space-between">
-                            <div>携程</div>
-                            <div><span class="book-price">￥68</span>起></div>
+                            <div>{{item.products[0].name}}</div>
+                            <div><span class="book-price">￥{{item.products[0].price}}</span>起></div>
                         </el-row>
                     </a>
                     <a href="#">
                         <el-row type="flex" justify="space-between">
-                            <div>艺龙</div>
-                            <div><span class="book-price">￥34</span>起></div>
+                            <div>{{item.products[1].name}}</div>
+                            <div><span class="book-price">￥{{item.products[1].price}}</span>起></div>
                         </el-row>
                     </a>
                     <a href="#">
                         <el-row type="flex" justify="space-between">
-                            <div>Hotels.com</div>
-                            <div><span class="book-price">￥105></span>起</div>
+                            <div>{{item.products[2].name}}</div>
+                            <div><span class="book-price">￥{{item.products[2].price}}</span>起></div>
                         </el-row>
                     </a>
                 </div>
@@ -61,7 +67,15 @@
 export default {
     data:function () {
         return {
-            value: 3.5
+            
+        }
+    },
+
+    props:{
+        data:{
+            type: Array,
+            // default:[{  scenic: [],hotellevel:{},name: '' }]
+            default:[]
         }
     }
 }
@@ -88,6 +102,9 @@ export default {
             width: 425px;
             padding-right: 35px;
             box-sizing: border-box;
+            i{
+                color: orange;
+            }
             h3{
                 font-weight: 400;
                 font-size: x-large;
