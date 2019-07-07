@@ -115,12 +115,14 @@
           </el-col>
           <el-col :span="8" class="img-content-right">
             <div class="img-content-right-like">
-              <h4>{{item.title}}</h4>
-              <nuxt-link to="#">
+              <h4 @click="handlePush(item.id)">{{item.title}}</h4>
+              <nuxt-link :to="`detail?id=${item.id}`">
                 <p>2019-07-6 10:59 阅读</p>
+                <input type="hidden" name id />
               </nuxt-link>
             </div>
           </el-col>
+          <input type="hidden" :id="item.id" />
         </el-row>
       </div>
     </el-col>
@@ -143,23 +145,34 @@ export default {
     };
   },
   mounted() {
-    this.$axios({
-      url: "posts",
-      method: "GET",
-      params: this.$route.query
-    }).then(res => {
-      this.detail = res.data.data;
-    });
+    this. getPostData();
     this.$axios({
       url: "posts/recommend",
       method: "GET",
       params: this.$route.query
     }).then(res => {
       this.recommend = res.data.data;
-      console.log(res.data.data)
+      console.log(res.data.data);
     });
   },
+  watch: {
+    $route() {
+       this. getPostData();
+    }
+  },
   methods: {
+    getPostData() {
+      this.$axios({
+        url: "posts",
+        method: "GET",
+        params: this.$route.query
+      }).then(res => {
+        this.detail = res.data.data;
+      });
+    },
+    handlePush(id) {
+      this.$router.push(`detail?id=${id}`);
+    },
     handleRemove(file, fileList) {
       console.log(file, fileList);
     },
@@ -319,7 +332,7 @@ export default {
         }
         .img-content-right {
           .img-content-right-like {
-                cursor: pointer;
+            cursor: pointer;
             h4 {
               padding-top: 0px;
             }
