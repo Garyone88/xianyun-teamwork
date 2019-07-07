@@ -1,7 +1,7 @@
 <template>
   <el-row type="flex" class="detail">
     <!-- 左面 -->
-    <el-col :span="17" class="left">
+    <el-col :span="17" class="left" v-for="(item,index) in detail" :key="index">
       <!-- 面包屑 -->
       <div class="mianbao">
         <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -9,17 +9,17 @@
           <el-breadcrumb-item :to="{ path: '/' }">攻略详情</el-breadcrumb-item>
         </el-breadcrumb>
       </div>
-      <h1 class="title">塞班贵？一定是你的打开方式不对！6000块玩转塞班</h1>
+      <h1 class="title">{{item.title}}</h1>
       <div class="time">
-        <p>攻略：2019-05-22 10:57</p>
+        <p>攻略：{{item.city.created_at}}</p>
         <p>阅读：567</p>
       </div>
       <!-- 文章内容 -->
       <div class="content">
-        <p>大家对塞班岛总存在着这样的误解，知道它是美属地盘，就理所当然地觉得这里的花费一定很高，花费高有高的玩法，那如果只有6000块的预算呢？要怎么玩？关于旅行这件事，我们要让钱花得更有道理，收下这份攻略，带你6000块花式玩转塞班。</p>
+        {{item.content}}
         <img
           style=" width: 100% ; height: 100% "
-          src="https://n3-q.mafengwo.net/s10/M00/E8/E4/wKgBZ1octoCABhgLAAafahORRLs91.jpeg?imageView2%2F2%2Fw%2F1360%2Fq%2F90"
+          :src="item.images[0]"
           alt
         />
         <p style="color:#99a6c4">图：塞班岛。 by第5季旅游</p>
@@ -31,20 +31,18 @@
           机票和酒店的花销往往会占据我们旅行大半的花销，假设机票酒店为塞班行预算的一半，剩下的吃行玩购为预算的另一半，如果能在机票酒店这部分省下钱，也就意味着在塞班岛用来吃行玩购的钱就增加了
           <img
             style="width:56px;height:56px"
-            src="https://images.mafengwo.net/images/i/face/brands_v3/6@2x.png"
+             :src="item.images[1]"
             alt
           />
         </p>
         <img
           style=" width: 100% ; height: 100% "
-          src="https://p1-q.mafengwo.net/s10/M00/E9/33/wKgBZ1octwiAAKAoAAJ9ixcJc9M71.jpeg?imageView2%2F2%2Fw%2F1360%2Fq%2F90"
+           :src="item.images[2]"
           alt
         />
-        <p>
-          怎样去塞班？可以转机也可以直飞，转机大多会从韩国转，提前蹲守能买到韩国飞塞班的特价机票，2000以下就能入手，加上国内飞韩国的机票来回塞班得5000+，还没算上在塞班的住宿费用，转机还有中途等待的时间，光花在路途上的时间就比直飞要多上一倍甚至更多，转乘奔波劳累，非联程票还要担心行李托运问题，所以建议大家有直飞还是尽量选择直飞。
-          在酒店上，旅途中我们呆在酒店的时间远比在外游玩的时间少，酒店干净整洁基本就能满足我们休息的需求，塞班不是个享受酒店的地方而且还真不能跟国内星级酒店等位比较，所以不建议大家花过多的钱在塞班的酒店体验上。
-          怎样在机票酒店上获得最高性价比的体验？ 直飞塞班的航班一般和酒店一起打包成机票+酒店套餐，价格要比单定机票、酒店要更加便捷实惠，往往3千多就能把机票和酒店一键搞定。
-        </p>
+
+          {{item.summary}}
+
       </div>
       <!-- 评论点赞 -->
       <div class="good">
@@ -117,6 +115,24 @@
       <div class="about">
         <p>相关攻略</p>
       </div>
+
+         <div class="about-btm">
+            <el-row class="img-content" v-for="(item,index) in recommend" :key="index">
+                <el-col :span="9" class="img-content-left">
+                  <div class="grid-content bg-purple-light"> <img  alt="">
+                  </div>
+                </el-col>
+                <el-col :span="5" class="img-content-right">
+                  <div class="img-content-right-like">
+                    <h4>{{item.title}}</h4>
+                    <nuxt-link to="#">
+                       <p>2019-07-6 10:59 阅读</p> 
+                    </nuxt-link>
+                  </div>  
+                </el-col>
+          </el-row >
+         </div>
+
     </el-col>
   </el-row>
 </template>
@@ -125,16 +141,33 @@
 export default {
   data() {
     return {
-      textarea: "",
-
-      dialogImageUrl: "",
+      detail:[],
+      recommend:[],
+      textarea:"",
+      dialogImageUrl:"",
       dialogVisible: false,
-
       currentPage1: 5,
       currentPage2: 5,
       currentPage3: 5,
       currentPage4: 4
     };
+  },
+  mounted(){
+       this.$axios({
+              url:'posts',
+              method:'GET',
+              params:this.$route.query,
+       }).then(res=>{
+             this.detail = res.data.data;  
+       })
+        this.$axios({
+              url:'posts/recommend',
+              method:'GET',
+              params:this.$route.query,
+       }).then(res=>{
+             console.log( res.data.data)
+             this.recommend = res.data.data
+       })
   },
   methods: {
     handleRemove(file, fileList) {
@@ -158,7 +191,7 @@ export default {
           url: "/posts/star",
           method: "GET",
           params:{
-          id:'$router.query.id'
+          id: this.$route.query.id
           },
            headers: {
             Authorization: `Bearer ${token}`
@@ -198,7 +231,6 @@ export default {
     }
     }
   },
-  mounted() {}
 };
 </script>
 
@@ -266,12 +298,46 @@ export default {
   }
 
   .right {
+     margin-left:40px;
     .about {
-      margin: 40px 0;
+      margin: 20px 0;
       border-bottom: 1px solid #ccc;
       padding-bottom: 10px;
       font-size: 18px;
     }
+    .about-btm{
+         .img-content{
+                border-bottom: 1px solid #ccc;
+                margin-bottom: 10px;
+                padding-bottom:10px;
+                font-size: 18px;
+
+           .img-content-left{
+              img{width:100px; height:100px; background:'#333';  display: block;}
+           }
+           .img-content-right{
+             h4{
+                padding-top: 0px;
+             }
+             a{
+                    position: absolute;
+                     display: block;
+                     width: 100%;
+                     font-size: 12px;
+                     color: #ccc;
+                     margin-left: 40px;
+                     padding-left: 36px;
+                     bottom: 10px;
+                     left: 30px;
+                     
+                  p{
+                      
+                    }
+             }    
+           
+           }
+         }
+    } 
   }
 }
 </style>
