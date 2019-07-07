@@ -15,13 +15,9 @@
         <p>阅读：567</p>
       </div>
       <!-- 文章内容 -->
-      <div class="content">
+      <div class="content" v-html="item.content">
         {{item.content}}
-        <img
-          style=" width: 100% ; height: 100% "
-          :src="item.images[0]"
-          alt
-        />
+        <img class="imgOdd" :src="item.images[0]" />
         <p style="color:#99a6c4">图：塞班岛。 by第5季旅游</p>
 
         <h1>一、怎样用6000块玩转塞班？</h1>
@@ -31,18 +27,12 @@
           机票和酒店的花销往往会占据我们旅行大半的花销，假设机票酒店为塞班行预算的一半，剩下的吃行玩购为预算的另一半，如果能在机票酒店这部分省下钱，也就意味着在塞班岛用来吃行玩购的钱就增加了
           <img
             style="width:56px;height:56px"
-             :src="item.images[1]"
-            alt
+            class="img2"
+            :src="item.images[1]"
           />
         </p>
-        <img
-          style=" width: 100% ; height: 100% "
-           :src="item.images[2]"
-          alt
-        />
-
-          {{item.summary}}
-
+        <img class="imgOdd" :src="item.images[2]" />
+        {{item.summary}}
       </div>
       <!-- 评论点赞 -->
       <div class="good">
@@ -111,28 +101,28 @@
     </el-col>
 
     <!-- 右面 -->
-    <el-col :span="7" class="right">
+    <el-col :span="8" class="right">
       <div class="about">
         <p>相关攻略</p>
       </div>
 
-         <div class="about-btm">
-            <el-row class="img-content" v-for="(item,index) in recommend" :key="index">
-                <el-col :span="9" class="img-content-left">
-                  <div class="grid-content bg-purple-light"> <img  alt="">
-                  </div>
-                </el-col>
-                <el-col :span="5" class="img-content-right">
-                  <div class="img-content-right-like">
-                    <h4>{{item.title}}</h4>
-                    <nuxt-link to="#">
-                       <p>2019-07-6 10:59 阅读</p> 
-                    </nuxt-link>
-                  </div>  
-                </el-col>
-          </el-row >
-         </div>
-
+      <div class="about-btm">
+        <el-row class="img-content" v-for="(item,index) in recommend" :key="index">
+          <el-col :span="10" class="img-content-left">
+            <div class="grid-content bg-purple-light">
+              <img alt />
+            </div>
+          </el-col>
+          <el-col :span="8" class="img-content-right">
+            <div class="img-content-right-like">
+              <h4>{{item.title}}</h4>
+              <nuxt-link to="#">
+                <p>2019-07-6 10:59 阅读</p>
+              </nuxt-link>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
     </el-col>
   </el-row>
 </template>
@@ -141,10 +131,10 @@
 export default {
   data() {
     return {
-      detail:[],
-      recommend:[],
-      textarea:"",
-      dialogImageUrl:"",
+      detail: [],
+      recommend: [],
+      textarea: "",
+      dialogImageUrl: "",
       dialogVisible: false,
       currentPage1: 5,
       currentPage2: 5,
@@ -152,22 +142,22 @@ export default {
       currentPage4: 4
     };
   },
-  mounted(){
-       this.$axios({
-              url:'posts',
-              method:'GET',
-              params:this.$route.query,
-       }).then(res=>{
-             this.detail = res.data.data;  
-       })
-        this.$axios({
-              url:'posts/recommend',
-              method:'GET',
-              params:this.$route.query,
-       }).then(res=>{
-             console.log( res.data.data)
-             this.recommend = res.data.data
-       })
+  mounted() {
+    this.$axios({
+      url: "posts",
+      method: "GET",
+      params: this.$route.query
+    }).then(res => {
+      this.detail = res.data.data;
+    });
+    this.$axios({
+      url: "posts/recommend",
+      method: "GET",
+      params: this.$route.query
+    }).then(res => {
+      this.recommend = res.data.data;
+      console.log(res.data.data)
+    });
   },
   methods: {
     handleRemove(file, fileList) {
@@ -190,13 +180,10 @@ export default {
         this.$axios({
           url: "/posts/star",
           method: "GET",
-          params:{
-          id: this.$route.query.id
-          },
-           headers: {
+          params: this.$route.query,
+          headers: {
             Authorization: `Bearer ${token}`
-          },
-
+          }
         }).then(res => {
           this.$message.success("收藏成功");
         });
@@ -208,29 +195,29 @@ export default {
       }
     },
     // 点赞功能
-    handleGood (){
-    let token=this.$store.state.user.userInfo.token
-    if(token){
-    this.$axios({
-      url:"/posts/like",
-      method:'GET',
-      headers:{
-         Authorization:`Bearer ${token}`
-      },
-      params:{
-         id:this.$route.query.id
+    handleGood() {
+      let token = this.$store.state.user.userInfo.token;
+      if (token) {
+        this.$axios({
+          url: "/posts/like",
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          params: {
+            id: this.$route.query.id
+          }
+        }).then(res => {
+          this.$message.success("点赞成功");
+        });
+      } else {
+        this.$router.push({
+          path: "/user/login"
+        });
+        this.$message.success("请登录");
       }
-    }).then(res=>{
-       this.$message.success("点赞成功");
-    })
-    }else{
-      this.$router.push({
-        path: "/user/login"
-      });
-      this.$message.success("请登录");
     }
-    }
-  },
+  }
 };
 </script>
 
@@ -239,9 +226,19 @@ export default {
   width: 1000px;
   margin: 0 auto;
   position: relative;
+
   .left {
     .mianbao {
       margin: 20px 0;
+    }
+    .content {
+      max-width: 700px !important;
+      margin: 10px 0;
+      /deep/ img {
+        margin-top: 20px;
+        max-width: 700px;
+        width: auto;
+      }
     }
     .title {
       padding-bottom: 20px;
@@ -298,46 +295,49 @@ export default {
   }
 
   .right {
-     margin-left:40px;
+    margin-left: 40px;
     .about {
       margin: 20px 0;
       border-bottom: 1px solid #ccc;
       padding-bottom: 10px;
       font-size: 18px;
     }
-    .about-btm{
-         .img-content{
-                border-bottom: 1px solid #ccc;
-                margin-bottom: 10px;
-                padding-bottom:10px;
-                font-size: 18px;
+    .about-btm {
+      .img-content {
+        border-bottom: 1px solid #ccc;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        font-size: 18px;
 
-           .img-content-left{
-              img{width:100px; height:100px; background:'#333';  display: block;}
-           }
-           .img-content-right{
-             h4{
-                padding-top: 0px;
-             }
-             a{
-                    position: absolute;
-                     display: block;
-                     width: 100%;
-                     font-size: 12px;
-                     color: #ccc;
-                     margin-left: 40px;
-                     padding-left: 36px;
-                     bottom: 10px;
-                     left: 30px;
-                     
-                  p{
-                      
-                    }
-             }    
-           
-           }
-         }
-    } 
+        .img-content-left {
+          img {
+            width: 100px;
+            height: 100px;
+            background: "#333";
+            display: block;
+          }
+        }
+        .img-content-right {
+          .img-content-right-like {
+                cursor: pointer;
+            h4 {
+              padding-top: 0px;
+            }
+            a {
+              position: absolute;
+              display: block;
+              width: 100%;
+              font-size: 12px;
+              color: #ccc;
+              margin-left: 50px;
+              padding-left: 36px;
+              bottom: 10px;
+              left: 30px;
+            }
+          }
+        }
+      }
+    }
   }
 }
 </style>
