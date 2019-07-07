@@ -10,9 +10,13 @@
                         <div 
                         v-if="data[0]" 
                         :class="{'link':true,'link-hidden':isShow}">
-                            <em @click="handleLinkAll">全部</em>
-                            <!-- :class="{'link-choose': (this.$route.query.scenic || 0) === item.id}" -->
+                            <em 
+                            @click="handleLinkAll" 
+                            :class="{'link-choose': $route.query.scenic === undefined}"
+                            >全部</em>
+                            
                             <em
+                            :class="{'link-choose': ($route.query.scenic || 0) === item.id}"
                             @click='handleLinkChoose(item.id)'
                             v-for="(item, index) in data[0].scenic" 
                             :key="index">
@@ -125,7 +129,7 @@ export default {
                 cursor: pointer;
                 font-style: normal;
                 &:hover{
-                    color: aqua;
+                    color: #09f;
                     text-decoration: underline;
                 }
            }

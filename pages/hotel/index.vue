@@ -119,8 +119,10 @@ export default {
       currentPage: 1,  //当前页码
       total: 1,   //页数总计
       pagesize: 10, //每页没显示多少条
-      input: "",
-      value: "",
+      input: "",   //人数的输入
+      value: "",  //日期的选择
+      enterTime: '',  //入住时间
+      leftTime: '', //离开时间
       state: "", //目的地
       adult: 1, //成年人
       children: 0, //儿童
