@@ -3,11 +3,12 @@
         <el-input
         v-model="city"
         placeholder="请输入想去的地方，比如：'广州'"
-        class="el-input">
+        class="el-input"
+         @keydown.enter.native="handleSearch">
         <i slot="suffix" class="el-icon-search" @click="handleSearch"></i>
         </el-input>
         <el-row class="advise">
-            <i @click="handledemo">推荐:</i>
+            <i>推荐:</i>
             <span v-for="(item, index) in adviseCity" :key="index" @click="handlePush(item)">
                 {{item}}
             </span>
@@ -26,10 +27,13 @@ export default {
         city: ''
       }
     },
+    watch:{
+        $route(){
+            // console.log(this.$route.query.city);
+            this.city =  this.$route.query.city;
+        }
+    },
     methods:{
-        handledemo(){
-            this.adviseCity.push("深圳")
-        },
         // 搜索城市
         handleSearch(){
             this.$router.push({
@@ -53,7 +57,7 @@ export default {
         padding: 20px 0;
         /deep/ .el-input {
             input{
-                border: 1px solid orangered;
+                border: 3px solid orangered;
                 border-radius: 10px;
             }
             .el-icon-search {

@@ -6,10 +6,6 @@
         <div>
           <NavMenu />
         </div>
-        <!-- 推荐城市 -->
-        <div>
-          <AsideRecommend />
-        </div>
       </el-col>
       <el-col :span="16">
         <!-- 搜索框 -->
@@ -39,7 +35,7 @@
                 <span>&nbsp;&nbsp;by</span>
                 <div class="recommend_bottom_nickname" @click="handlePushUserPersonal()">
                     &nbsp;
-                  <img :src="`http://157.122.54.189:9095${item.account.defaultAvatar}`" alt /> 
+                  <img src="http://157.122.54.189:9095/assets/images/avatar.jpg" alt />                  
                   {{item.account.nickname}}
                 </div>
                 <div class="recommend_bottom_watch">
@@ -74,19 +70,18 @@
 <script>
 import NavMenu from "@/components/post/navMenu.vue";
 import Search from "@/components/post/search.vue";
-import AsideRecommend from "@/components/post/asideRecommend.vue";
 export default {
   data() {
     return {
         total:null,
         // 渲染页面的数据
       posts: [],
+      //未分页前的数据
+      allPosts:[],
       //当前页
       currentPage:1,
       //每页条数
-      pageSize:5,
-      // 每页第一条的索引
-      start:0
+      pageSize:5
     };
   },
   mounted() {
@@ -98,18 +93,19 @@ export default {
       this.$axios({
         url: "/posts",
         methods: "GET",
-        params: {
-          city:this.$route.query.city,
-          //分页处理
-          _start:this.start,
-          _limit:this.pageSize
-        }
+        params: this.$route.query
       }).then(res => {
-        console.log(res);
+        // console.log(res);
         const { data,total } = res.data;
-        this.posts = data;
+        this.allPosts = data;
         this.total = total;
+        this.setPosts();
       });
+    },
+    setPosts() {
+        const start = (this.currentPage-1) * this.pageSize;
+         const end = start + this.pageSize;
+        this.posts = this.allPosts.slice(start,end);
     },
     // 跳转文章详情页
     handlePushById(id){
@@ -134,29 +130,24 @@ export default {
     //每页条数
       handleSizeChange(val) { 
          this.pageSize = val;
-         this.getPosts();
+         this.setPosts();
         // console.log(`每页 ${val} 条`);
       },
     //   当前页
       handleCurrentChange(val) {
           this.currentPage = val;
-          this.start = (this.currentPage-1) * this.pageSize;
-          this.getPosts();
+          this.setPosts();
         // console.log(`当前页: ${val}`);
       }
   },
   watch: {
     $route() {
-      //路由改变时，回到第一页重新渲染数据
-      this.start = 0;
-      this.currentPage = 1;
       this.getPosts();
     }
   },
   components: {
     NavMenu,
-    Search,
-    AsideRecommend
+    Search
   }
 };
 </script>

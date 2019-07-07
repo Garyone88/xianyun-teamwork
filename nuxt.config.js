@@ -53,11 +53,7 @@ export default {
   */
   axios: {
     baseURL: "http://157.122.54.189:9095",
-<<<<<<< HEAD
 	//  baseURL: "http://127.0.0.1:1337"
-=======
-  //  baseURL: "http://127.0.0.1:1337"
->>>>>>> 9ac55f5a95ac42fd82f6b1edd576a334d32b4977
   },
   /*
   ** Build configuration
