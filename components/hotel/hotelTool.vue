@@ -17,6 +17,9 @@
                         {{hotellevel}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item
+                        command='all'
+                        >不限</el-dropdown-item>
                         <el-dropdown-item 
                         :command="`${item.level}&${item.name}`" 
                         v-for="(item, index) in data.levels"
@@ -32,6 +35,9 @@
                         {{hoteltype}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item
+                        command='all'
+                        >不限</el-dropdown-item>
                         <el-dropdown-item 
                         :command="`${item.id}&${item.name}`" 
                         v-for="(item, index) in data.types"
@@ -47,6 +53,9 @@
                         {{hotelfacility}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item
+                        command='all'
+                        >不限</el-dropdown-item>
                         <el-dropdown-item 
                         :command="`${item.id}&${item.name}`" 
                         v-for="(item, index) in data.assets"
@@ -62,6 +71,9 @@
                         {{hotelbrand}}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown" style="height: 200px;overflow: auto;">
+                        <el-dropdown-item
+                        command='all'
+                        >不限</el-dropdown-item>
                         <el-dropdown-item 
                         :command="`${item.id}&${item.name}`"  
                         v-for="(item, index) in data.brands"
@@ -98,27 +110,48 @@ export default {
 
     methods:{
         handleLevels(command) {
-            let arr = command.split('&')
-            this.$emit('changeHotellevel',+arr[0]);
-            this.hotellevel = arr[1];
+            if(command === 'all'){
+                this.hotellevel = '不限';
+                this.$emit('changeHotellevel',command);
+            }else{
+                let arr = command.split('&')
+                this.$emit('changeHotellevel',+arr[0]);
+                this.hotellevel = arr[1];
+            }
+            
         },
 
         handleTypes(command) {
-            let arr = command.split('&')
-            this.$emit('changeHoteltype',+arr[0]);
-            this.hoteltype = arr[1];
+            if(command === 'all'){
+                this.hoteltype = '不限';
+                this.$emit('changeHoteltype',command);
+            }else{
+                let arr = command.split('&')
+                this.$emit('changeHoteltype',+arr[0]);
+                this.hoteltype = arr[1];
+            }
         },
 
         handleAssets(command) {
-            let arr = command.split('&')
-            this.$emit('changeHotelasset',+arr[0]);
-            this.hotelfacility = arr[1];
+            if(command === 'all'){
+                this.hotelfacility = '不限';
+                this.$emit('changeHotelasset',command);
+            }else{
+                let arr = command.split('&')
+                this.$emit('changeHotelasset',+arr[0]);
+                this.hotelfacility = arr[1];
+            }
         },
 
         handleBrands(command) {
-            let arr = command.split('&')
+            if(command === 'all'){
+                this.hotelbrand = '不限';
+                this.$emit('changgeHotelbrand',command);
+            }else{
+                let arr = command.split('&')
             this.$emit('changgeHotelbrand',+arr[0]);
             this.hotelbrand = arr[1];
+            }
         },
     },
 

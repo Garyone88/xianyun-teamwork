@@ -7,13 +7,13 @@
         :key="index"
         >
             <div class="hotel-img">
-                <a href="#">
+                <nuxt-link :to="`/hotel/detail/?id=${item.id}`">
                     <img :src="item.photos" alt="">
-                </a>
+                </nuxt-link>
             </div>
             <el-row class="hotel-info" type="flex" justify="space-between">
                 <div class="hotel-introduce">
-                    <a href="#"><h3>{{item.name}}</h3></a>
+                    <nuxt-link :to="`/hotel/detail/?id=${item.id}`"><h3>{{item.name}}</h3></nuxt-link>
                     <div class="introduce-tips">
                         {{item.alias}}  
                         <i 

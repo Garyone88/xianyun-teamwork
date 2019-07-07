@@ -70,7 +70,7 @@
 
     <!-- 中间 -->
     <el-row type="flex" justify="space-between" class="middle">
-      <HotelMiddle/>
+      <HotelMiddle :data='hotellist'/>
       <HotelMap />
     </el-row>
     <!-- 中间工具栏 -->
@@ -153,7 +153,6 @@ export default {
 
       restaurants: [], //目的地显示数组
 
-      // hotellist:[{  scenic: [],hotellevel:{},name: '' }],  //根据条件渲染的酒店列表
       hotellist:[],  //根据条件渲染的酒店列表
 
       hoteloptions: {}  //酒店选项的数据
@@ -267,22 +266,54 @@ export default {
 
     //工具组件传值回来修改酒店等级
     changeHotellevel(val){
-      this.hotellevel = val;
+      if(val !== 'all'){
+        this.hotellevel = val;
+      }else{
+        let{ hotellevel, ...newobj } = this.$route.query;
+        this.$router.push({
+          path:'/hotel',
+          query: newobj
+        })
+      }
     },
 
     //工具组件传值回来修改酒店类型
     changeHoteltype(val){
-      this.hoteltype = val;
+      if(val !== 'all'){
+        this.hoteltype = val;
+      }else{
+        let{ hoteltype, ...newobj } = this.$route.query;
+        this.$router.push({
+          path:'/hotel',
+          query: newobj
+        })
+      }
     },
 
     //工具组件传值回来修改酒店设施
     changeHotelasset(val){
-      this.hoteltype = val;
+      if(val !== 'all'){
+        this.hotelasset = val;
+      }else{
+        let{ hotelasset, ...newobj } = this.$route.query;
+        this.$router.push({
+          path:'/hotel',
+          query: newobj
+        })
+      }
     },
 
     //工具组件传值回来修改酒店品牌
     changgeHotelbrand(val){
-      this.hotelbrand = val;
+      if(val !== 'all'){
+        this.hotelbrand = val;
+      }else{
+        let{ hotelbrand, ...newobj } = this.$route.query;
+        this.$router.push({
+          path:'/hotel',
+          query: newobj
+        })
+      }
     }
   },
 
@@ -386,7 +417,7 @@ export default {
     })
 
 
-    
+
 
   }
 };

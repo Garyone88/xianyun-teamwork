@@ -7,19 +7,24 @@
                 <el-row>
                     <el-col :span="3">区域：</el-col>
                     <el-col :span="21">
-                        <div>
-                            <!-- <nuxt-link 
+                        <div 
+                        v-if="data[0]" 
+                        :class="{'link':true,'link-hidden':isShow}">
+                            <em @click="handleLinkAll">全部</em>
+                            <!-- :class="{'link-choose': (this.$route.query.scenic || 0) === item.id}" -->
+                            <em
+                            @click='handleLinkChoose(item.id)'
                             v-for="(item, index) in data[0].scenic" 
                             :key="index">
                                 {{item.name}}
-                            </nuxt-link> -->
-                            <!-- {{data}} -->
+                            </em>
                         </div>
-                        <div>
-                            <i class="el-icon-arrow-down" style="color: orange" v-if="true"></i>
+                        <div v-if="data[0]" class="hidden" @click="handleHidden">
+                            <i class="el-icon-arrow-down" style="color: orange" v-if="isShow"></i>
                             <i class="el-icon-arrow-up" style="color: orange" v-else></i>
-                            等43个区域
+                            等{{data[0].scenic.length}}个区域
                         </div>
+                        <div v-else><h3>暂无数据</h3></div>
                     </el-col>
                 </el-row>
 
@@ -65,25 +70,42 @@
 
 <script>
 export default {
-    // props:{
-    //     data:{
-    //         type: Array,
-    //         default: [{  scenic: [],hotellevel:{},name: '' }]
-    //     }
-    // },
+    props:{
+        data:{
+            type: Array,
+            default: [{scenic:[{name:''}],name:''}]
+        }
+    },
     data: function () {
         return {
             restaurants: [],
-            
-            
-            
+            isShow: true
         }
     },
-
-    methods: {
-      
-    },
     
+    methods:{
+        handleLinkChoose(id){
+            this.$router.push({
+                path: '/hotel',
+                query:{
+                    ...this.$route.query,
+                    scenic:id
+                }
+            })
+        },
+
+        handleHidden(){
+            this.isShow = !this.isShow;
+        },
+
+        handleLinkAll(){
+            let{scenic, ...newobj} = this.$route.query;
+            this.$router.push({
+                path: '/hotel',
+                query: newobj
+            })
+        }
+    }
 }
 </script>
 
@@ -96,6 +118,37 @@ export default {
         > div{
           margin-bottom: 20px;
         }
+
+        .link{
+           em{
+                margin-right: 10px;
+                cursor: pointer;
+                font-style: normal;
+                &:hover{
+                    color: aqua;
+                    text-decoration: underline;
+                }
+           }
+        }
+
+        .link-hidden{
+            height: 42px;
+            overflow: hidden;
+        }
+
+        .link-choose{
+            background-color: #eee;
+            &:hover{
+                color: #666 !important ;
+                text-decoration: none !important;
+                cursor: text;
+            }
+        }
+
+        .hidden{
+            cursor: pointer;
+        }
+
         .ave{
             span{
                 margin-right: 20px;
