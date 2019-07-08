@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <!-- 面包屑 -->
-    <div class="breadcrumb">酒店 > 南京市酒店预订</div>
+    <div class="breadcrumb">酒店 > {{state}}酒店预订</div>
 
     <!-- 顶部工具栏 -->
     <el-row class="tool" type="flex">
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <el-button type="primary">查看价格</el-button>
+      <el-button type="primary" @click="handleSelectHotel">查看价格</el-button>
     </el-row>
 
     <!-- 中间 -->
@@ -108,6 +108,8 @@
 </template>
 
 <script>
+import monent from 'moment';
+
 import HotelMiddle from "@/components/hotel/hotelMiddle.vue";
 import HotelList from "@/components/hotel/hotelList.vue";
 import HotelTool from "@/components/hotel/hotelTool.vue";
@@ -126,7 +128,7 @@ export default {
       state: "", //目的地
       adult: 1, //成年人
       children: 0, //儿童
-      person: 1,    //总人数 
+      person: 0,    //总人数 
       isShow: false, //隐藏选项
       price_lt: 0,   //工具栏的价格
       hotellevel: 0, //工具栏的酒店等级
@@ -197,6 +199,7 @@ export default {
       this.$router.push({
         path: "/hotel",
         query: {
+          ...this.$route.query,
           city: item.id
         }
       });
@@ -225,6 +228,7 @@ export default {
           this.$router.push({
             path: "/hotel",
             query: {
+              ...this.$route.query,
               city: this.restaurants.id
             }
           });
@@ -316,6 +320,22 @@ export default {
           query: newobj
         })
       }
+    },
+
+    //点击查看价格按钮
+    handleSelectHotel(){
+      let newobj = {...this.$route.query};
+      if(this.person !== 0){
+        newobj.person = this.person;
+      }
+      if(this.value !== ''){
+        newobj.enterTime = this.enterTime;
+        newobj.leftTime = this.leftTime;
+      }
+      this.$router.push({
+        path: '/hotel',
+        query: newobj
+      })
     }
   },
 
@@ -387,6 +407,21 @@ export default {
         this.total = res.data.total;
         this.hotellist = res.data.data;
       })
+    },
+
+    value(){
+      var enterTime = monent(this.value[0]).format('YYYY-MM-DD');
+      var leftTime = monent(this.value[1]).format('YYYY-MM-DD');
+      this.enterTime = enterTime;
+      this.leftTime = leftTime;
+    },
+
+    adult(){
+      this.person = this.adult + this.children;
+    },
+
+    children(){
+      this.person = this.adult + this.children;
     }
   },
 

@@ -153,12 +153,45 @@ export default {
             this.hotelbrand = arr[1];
             }
         },
+
     },
 
     watch:{
         value:function () {
             this.$emit('changePrice_in',this.value)
         }
+    },
+
+    mounted(){
+        setTimeout( () => {
+            if(this.$route.query.price_lt !== undefined){
+                this.value = +this.$route.query.price_lt
+            }
+
+            if(this.$route.query.hotellevel === undefined){
+                this.hotellevel = '不限'
+            }else{
+                this.hotellevel = this.data.levels[+this.$route.query.hotellevel-1].name;
+            }
+
+            if(this.$route.query.hoteltype === undefined){
+                this.hoteltype = '不限'
+            }else{
+                this.hoteltype = this.data.types[+this.$route.query.hoteltype-1].name;
+            }
+
+            if(this.$route.query.hotelasset === undefined){
+                this.hotelfacility = '不限'
+            }else{
+                this.hotelfacility = this.data.assets[+this.$route.query.hotelasset-1].name
+            }
+
+            if(this.$route.query.hotelbrand === undefined){
+                this.hotelbrand = '不限'
+            }else {
+                this.hotelbrand = this.data.brands[+this.$route.query.hotelbrand-4].name
+            }
+        },3000)
     }
     
 }
