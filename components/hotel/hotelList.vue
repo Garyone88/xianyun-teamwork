@@ -5,6 +5,7 @@
         type="flex"
         v-for="(item, index) in data"
         :key="index"
+        @click="handleClick"
         >
             <div class="hotel-img">
                 <nuxt-link :to="`/hotel/detail/?id=${item.id}`">
@@ -76,6 +77,13 @@ export default {
             type: Array,
             // default:[{  scenic: [],hotellevel:{},name: '' }]
             default:[]
+        }
+    },
+    methods:{
+        handleClick(){
+            const id = this.data.id;
+            console.log(id);
+             this.$router.push("/hotel/detail/?id="+id)
         }
     }
 }
